@@ -7,17 +7,18 @@ import (
 	"github.com/matryer/is"
 )
 
-func TestAssetsStruct(t *testing.T) {
+func TestAssetStruct(t *testing.T) {
 	is := is.New(t)
 	var a Asset
-	
+
 	err := json.Unmarshal([]byte(assetJson), &a)
 	is.NoErr(err)
 
 	is.Equal("", a.Description)
+	is.Equal(1704872214000, a.LastCollection.Timestamp)
 }
 
-const assetJson = `
+const assetJson string = `
 {
 	"latestFullness": 0,
 	"reason": "NOT_READY",

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/diwise/integration-bigbelly/internal/pkg/application"
 	"github.com/diwise/service-chassis/pkg/infrastructure/buildinfo"
@@ -16,12 +17,17 @@ const (
 func main() {
 	serviceVersion := buildinfo.SourceVersion()
 
-	ctx, _, cleanup := o11y.Init(context.Background(), serviceName, serviceVersion)
+	ctx, log, cleanup := o11y.Init(context.Background(), serviceName, serviceVersion)
 	defer cleanup()
 
 	bigBellyApiUrl := env.GetVariableOrDie(ctx, "BIGBELLY_API", "bigbelly url")
 
 	app := application.New(bigBellyApiUrl)
 
-	app.GetAssets()
+	_, err := app.GetAssets(ctx)
+	if err != nil {
+		// felhantera...
+		log.Error("failed to get assets", "err", err.Error())
+		os.Exit(1)
+	}
 }

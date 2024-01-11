@@ -1,6 +1,7 @@
 package application
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -18,7 +19,7 @@ func TestGetAssets(t *testing.T) {
 	defer svr.Close()
 
 	app := New(svr.URL)
-	assets, err := app.GetAssets()
+	assets, err := app.GetAssets(context.Background())
 	is.NoErr(err)
 
 	is.Equal(3, len(assets))

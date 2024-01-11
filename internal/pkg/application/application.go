@@ -1,9 +1,13 @@
 package application
 
-import "github.com/diwise/integration-bigbelly/internal/pkg/domain"
+import (
+	"context"
+
+	"github.com/diwise/integration-bigbelly/internal/pkg/domain"
+)
 
 type App interface {
-	GetAssets() ([]domain.Asset, error)
+	GetAssets(ctx context.Context) ([]domain.Asset, error)
 }
 
 type app struct {
@@ -20,7 +24,7 @@ func New(bigBellyApiUrl string) App {
 	}
 }
 
-func (a *app) GetAssets() ([]domain.Asset, error) {
+func (a *app) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 
 	// skapa en ny struct för att kunna hantera svaret från servern
 	// skapa en http client och anropa big belly API
