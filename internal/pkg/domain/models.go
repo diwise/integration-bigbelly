@@ -1,6 +1,6 @@
 package domain
 
-type Assets struct {
+type Asset struct {
 	LatestFullness    string  `json:"latestFullness"`
 	FullnessThreshold string  `json:"fullnessThreshold"`
 	Status            string  `json:"status"`
