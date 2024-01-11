@@ -101,7 +101,7 @@ const assetsResponseString = `{
             "position": "center",
             "longitude": 18.308756448328495,
             "status": "IN_SERVICE"
-        },
+        }
     ],
     "errorCode": "STATUS_OK"
 }`

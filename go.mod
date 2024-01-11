@@ -4,6 +4,8 @@ go 1.21
 
 require github.com/diwise/service-chassis v0.0.0-20231209115716-62bdf2a78c57
 
+require github.com/felixge/httpsnoop v1.0.4 // indirect
+
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
@@ -19,6 +21,7 @@ require (
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.45.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1
 	go.opentelemetry.io/otel v1.21.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp v0.44.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.21.0 // indirect

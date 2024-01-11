@@ -21,8 +21,9 @@ func main() {
 	defer cleanup()
 
 	bigBellyApiUrl := env.GetVariableOrDie(ctx, "BIGBELLY_API", "bigbelly url")
+	//xToken := env.GetVariableOrDie(ctx, "XTOKEN", "API key")
 
-	app := application.New(bigBellyApiUrl)
+	app := application.New(bigBellyApiUrl /*, xToken*/)
 
 	_, err := app.GetAssets(ctx)
 	if err != nil {
