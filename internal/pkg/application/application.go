@@ -26,7 +26,8 @@ type app struct {
 }
 
 type BigBellyResponse struct {
-	// fyll i det som saknas... :)
+	Assets    []domain.Asset `json:"assets"`
+	ErrorCode string         `json:"errorCode"`
 }
 
 func New(bigBellyApiUrl string /*, xToken string*/) App {
@@ -58,7 +59,7 @@ func (a *app) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 		err = fmt.Errorf("failed to create request: %s", err.Error())
 		return nil, err
 	}
-	
+
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("X-Token", a.xToken)
 
@@ -88,5 +89,5 @@ func (a *app) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 	// skapa en ny struct för att kunna hantera svaret från servern
 	// plocka ut alla assets ur svaret från servern och returnera
 
-	return nil, nil
+	return bigBellyResponse.Assets, nil
 }

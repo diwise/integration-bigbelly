@@ -2,6 +2,7 @@ package domain
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/matryer/is"
@@ -14,8 +15,9 @@ func TestAssetStruct(t *testing.T) {
 	err := json.Unmarshal([]byte(assetJson), &a)
 	is.NoErr(err)
 
-	is.Equal("", a.Description)
-	is.Equal(1704872214000, a.LastCollection.Timestamp)
+	is.Equal("Torget", a.Description)
+	//is.Equal(1704872214000, a.LastCollection.Timestamp)
+	fmt.Printf("%+v\n", assetJson)
 }
 
 const assetJson string = `

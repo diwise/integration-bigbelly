@@ -1,8 +1,8 @@
 package domain
 
 type Asset struct {
-	LatestFullness    string  `json:"latestFullness"`
-	FullnessThreshold string  `json:"fullnessThreshold"`
+	LatestFullness    int     `json:"latestFullness"`
+	FullnessThreshold int     `json:"fullnessThreshold"`
 	Status            string  `json:"status"`
 	SerialNumber      int64   `json:"serialNumber"`
 	Longitude         float64 `json:"longitude"`
@@ -15,6 +15,10 @@ type Asset struct {
 		PercentFull int   `json:"percentFull"`
 		Timestamp   int64 `json:"timestamp"`
 	} `json:"lastCollection"`
+}
+
+type Assets struct {
+	Assets []Asset `json:"assets"`
 }
 
 type FillingLevel struct {

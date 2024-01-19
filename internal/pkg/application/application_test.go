@@ -7,14 +7,17 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/diwise/integration-bigbelly/internal/pkg/domain"
 	"github.com/matryer/is"
 )
 
 func TestGetAssets(t *testing.T) {
 	is := is.New(t)
 
+	var assets []domain.Asset
+
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, assetsResponseString)
+		fmt.Fprint(w, assetsResponse)
 	}))
 	defer svr.Close()
 
@@ -23,9 +26,10 @@ func TestGetAssets(t *testing.T) {
 	is.NoErr(err)
 
 	is.Equal(3, len(assets))
+
 }
 
-const assetsResponseString = `{
+const assetsResponse string = `{
     "assets": [
         {
             "latestFullness": 0,
