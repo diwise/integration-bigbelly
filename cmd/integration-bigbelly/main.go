@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/diwise/integration-bigbelly/internal/pkg/application"
@@ -21,14 +22,15 @@ func main() {
 	defer cleanup()
 
 	bigBellyApiUrl := env.GetVariableOrDie(ctx, "BIGBELLY_API", "bigbelly url")
-	//xToken := env.GetVariableOrDie(ctx, "XTOKEN", "API key")
+	xToken := env.GetVariableOrDie(ctx, "XTOKEN", "API key")
 
-	app := application.New(bigBellyApiUrl /*, xToken*/)
+	app := application.New(bigBellyApiUrl, xToken)
 
-	_, err := app.GetAssets(ctx)
+	assets, err := app.GetAssets(ctx)
 	if err != nil {
 		// felhantera...
 		log.Error("failed to get assets", "err", err.Error())
 		os.Exit(1)
 	}
+	fmt.Println(assets)
 }

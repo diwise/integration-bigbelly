@@ -30,10 +30,10 @@ type BigBellyResponse struct {
 	ErrorCode string         `json:"errorCode"`
 }
 
-func New(bigBellyApiUrl string /*, xToken string*/) App {
+func New(bigBellyApiUrl string, xToken string) App {
 	return &app{
 		bigBellyApiUrl: bigBellyApiUrl,
-		// xToken: xToken,
+		xToken:         xToken,
 	}
 }
 
@@ -85,9 +85,6 @@ func (a *app) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 		err = fmt.Errorf("failed to unmarshal response body: %s", err.Error())
 		return nil, err
 	}
-
-	// skapa en ny struct för att kunna hantera svaret från servern
-	// plocka ut alla assets ur svaret från servern och returnera
 
 	return bigBellyResponse.Assets, nil
 }

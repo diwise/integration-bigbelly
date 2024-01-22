@@ -21,7 +21,8 @@ func TestGetAssets(t *testing.T) {
 	}))
 	defer svr.Close()
 
-	app := New(svr.URL)
+	xToken := "nisse"
+	app := New(svr.URL, xToken)
 	assets, err := app.GetAssets(context.Background())
 	is.NoErr(err)
 
