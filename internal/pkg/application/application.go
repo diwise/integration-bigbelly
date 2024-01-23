@@ -16,11 +16,7 @@ import (
 
 var tracer = otel.Tracer("integration-bigbelly/app")
 
-type App interface {
-	GetAssets(ctx context.Context) ([]domain.Asset, error)
-}
-
-type app struct {
+type App struct {
 	bigBellyApiUrl string
 	xToken         string
 }
@@ -31,13 +27,13 @@ type BigBellyResponse struct {
 }
 
 func New(bigBellyApiUrl string, xToken string) App {
-	return &app{
+	return App{
 		bigBellyApiUrl: bigBellyApiUrl,
 		xToken:         xToken,
 	}
 }
 
-func (a *app) GetAssets(ctx context.Context) ([]domain.Asset, error) {
+func (a *App) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 	var err error
 
 	ctx, span := tracer.Start(ctx, "get-assets")
@@ -87,4 +83,33 @@ func (a *app) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 	}
 
 	return bigBellyResponse.Assets, nil
+}
+
+func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]domain.FillingLevel, error) {
+
+	var fillingLevels []domain.FillingLevel
+
+	// TODO: implementera logik för att mappa från asset till filling level
+
+	for _, asset := range assets {
+
+		// finns det någon status i asset som gör att vi vill hoppa över en asset?
+		// om ja, hoppa över den här asseten och gå vidare till nästa
+
+		// if asset.Status == "..." {
+		// 	continue
+		// }
+
+		// om nej, lägg till en ny filling level i listan med filling levels
+
+		fl := domain.NewFillingLevel(asset.ID, asset.ActualFillingPercentage, asset.ContainerFull, asset.ContainerEmpty, asset.LastCollection.Timestamp)
+
+		// är det mer på fl som ska fyllas i än de som är mandatory? gör det i sådana fall
+		// fl.AnnanProperty = asset.AnnanProperty
+
+
+		fillingLevels = append(fillingLevels, fl)
+	}
+
+	return fillingLevels, nil
 }

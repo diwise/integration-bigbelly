@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -21,13 +22,33 @@ func TestGetAssets(t *testing.T) {
 	}))
 	defer svr.Close()
 
-	xToken := "nisse"
-	app := New(svr.URL, xToken)
+	app := App{
+        bigBellyApiUrl: svr.URL,
+        xToken:         "nisse",
+    }
+
 	assets, err := app.GetAssets(context.Background())
 	is.NoErr(err)
 
 	is.Equal(3, len(assets))
 
+}
+
+func TestMapToFillingLevels(t *testing.T) {
+    is := is.New(t)
+
+    var assets []domain.Asset
+    json.Unmarshal([]byte(assetsResponse), &assets)
+
+    app := App{}
+    fillingLevels, err := app.MapToFillingLevels(context.Background(), assets)
+    is.NoErr(err)
+
+    is.Equal(3, len(fillingLevels))
+
+    // är det rätt att kolla procent så här? alltså att lastCollection.percentFull ska mappas till ActualFillingPercentage?
+    // eller är det ett annat värde som ska användas?
+    is.Equal(8, fillingLevels[1].ActualFillingPercentage)
 }
 
 const assetsResponse string = `{

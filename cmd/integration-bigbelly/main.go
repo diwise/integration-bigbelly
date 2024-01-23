@@ -32,5 +32,13 @@ func main() {
 		log.Error("failed to get assets", "err", err.Error())
 		os.Exit(1)
 	}
-	fmt.Println(assets)
+	
+	fillingLevels, err := app.MapToFillingLevels(ctx, assets)
+	if err != nil {
+		// felhantera...
+		log.Error("failed to map filling levels", "err", err.Error())
+		os.Exit(1)
+	}
+
+	fmt.Println(fillingLevels)
 }
