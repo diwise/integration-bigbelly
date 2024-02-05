@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
+	"time"
 
 	"github.com/diwise/integration-bigbelly/internal/pkg/domain"
 	"github.com/diwise/service-chassis/pkg/infrastructure/o11y/tracing"
@@ -96,19 +98,39 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 		// finns det någon status i asset som gör att vi vill hoppa över en asset?
 		// om ja, hoppa över den här asseten och gå vidare till nästa
 
-		// if asset.Status == "..." {
-		// 	continue
-		// }
+		if asset.Status == "OUT_OF_SERVICE" {
+			continue
+		} else {
+			//fl := domain.NewFillingLevel(asset.ID, asset.ActualFillingPercentage, asset.ContainerFull, asset.ContainerEmpty, asset.LastCollection.Timestamp)
+			// beräkna fillingpercentage mha vad??? LatestFullness *10?
+			//actualFillingPercentage := 100;
+
+			// Om fillingPercentage > 100 -> containerFull true annars false
+			containerFull := false
+			containerEmpty := true
+			var actualFillingPercentage float64
+			var highThreshold float64
+
+			actualFillingPercentage = float64(asset.LatestFullness) * 10
+			highThreshold = float64(asset.FullnessThreshold) * 10
+
+			if actualFillingPercentage >= 100 {
+				containerFull = true
+			} else {
+
+			}
+
+			// Viken tid ska sättas i time
+			fl := domain.NewFillingLevel(strconv.Itoa(int(asset.SerialNumber)), actualFillingPercentage, containerFull, containerEmpty, highThreshold, time.Now().UTC())
+			fillingLevels = append(fillingLevels, fl)
+
+		}
 
 		// om nej, lägg till en ny filling level i listan med filling levels
-
-		fl := domain.NewFillingLevel(asset.ID, asset.ActualFillingPercentage, asset.ContainerFull, asset.ContainerEmpty, asset.LastCollection.Timestamp)
 
 		// är det mer på fl som ska fyllas i än de som är mandatory? gör det i sådana fall
 		// fl.AnnanProperty = asset.AnnanProperty
 
-
-		fillingLevels = append(fillingLevels, fl)
 	}
 
 	return fillingLevels, nil

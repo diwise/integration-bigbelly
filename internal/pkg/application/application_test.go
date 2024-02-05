@@ -23,9 +23,9 @@ func TestGetAssets(t *testing.T) {
 	defer svr.Close()
 
 	app := App{
-        bigBellyApiUrl: svr.URL,
-        xToken:         "nisse",
-    }
+		bigBellyApiUrl: svr.URL,
+		xToken:         "nisse",
+	}
 
 	assets, err := app.GetAssets(context.Background())
 	is.NoErr(err)
@@ -35,26 +35,27 @@ func TestGetAssets(t *testing.T) {
 }
 
 func TestMapToFillingLevels(t *testing.T) {
-    is := is.New(t)
+	is := is.New(t)
 
-    var assets []domain.Asset
-    json.Unmarshal([]byte(assetsResponse), &assets)
+	r := BigBellyResponse{}
+	err := json.Unmarshal([]byte(assetsResponse), &r)
+	is.NoErr(err)
 
-    app := App{}
-    fillingLevels, err := app.MapToFillingLevels(context.Background(), assets)
-    is.NoErr(err)
+	app := App{}
+	fillingLevels, err := app.MapToFillingLevels(context.Background(), r.Assets)
+	is.NoErr(err)
 
-    is.Equal(3, len(fillingLevels))
+	is.Equal(3, len(fillingLevels))
 
-    // är det rätt att kolla procent så här? alltså att lastCollection.percentFull ska mappas till ActualFillingPercentage?
-    // eller är det ett annat värde som ska användas?
-    is.Equal(8, fillingLevels[1].ActualFillingPercentage)
+	// är det rätt att kolla procent så här? alltså att lastCollection.percentFull ska mappas till ActualFillingPercentage?
+	// eller är det ett annat värde som ska användas?
+	is.Equal(float64(8), fillingLevels[1].ActualFillingPercentage)
 }
 
 const assetsResponse string = `{
     "assets": [
         {
-            "latestFullness": 0,
+            "latestFullness": 8,
             "reason": "NOT_READY",
             "serialNumber": 1,
             "accountName": "Test kommun",

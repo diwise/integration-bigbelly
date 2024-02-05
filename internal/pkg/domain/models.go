@@ -34,7 +34,7 @@ type DeviceInfo struct {
 	Timestamp_ time.Time `lwm2m:"-"`
 }
 
-func NewFillingLevel(deviceID string, actualFillingPercentage float64, containerFull, containerEmpty bool, ts time.Time) FillingLevel{
+func NewFillingLevel(deviceID string, actualFillingPercentage float64, containerFull, containerEmpty bool, highThreshold float64, ts time.Time) FillingLevel {
 	return FillingLevel{
 		DeviceInfo: DeviceInfo{
 			ID_:        deviceID,
@@ -43,20 +43,21 @@ func NewFillingLevel(deviceID string, actualFillingPercentage float64, container
 		ActualFillingPercentage: actualFillingPercentage,
 		ContainerFull:           containerFull,
 		ContainerEmpty:          containerEmpty,
+		HighThreshold:           highThreshold,
 	}
 }
 
 type FillingLevel struct {
-
 	DeviceInfo
 
 	//	Mandatory, Filling level
-	ActualFillingPercentage float64 `json:"actualFillingPercentage"`  	
+	ActualFillingPercentage float64 `json:"actualFillingPercentage"`
 	ContainerFull           bool    `json:"containerFull"`
-	ContainerEmpty          bool    `json:"containerEmpty"`				// vad är skillnaden på de här? Kan båda vara true samtidigt?
+	ContainerEmpty          bool    `json:"containerEmpty"` // vad är skillnaden på de här? Kan båda vara true samtidigt?
 
 	//	Optional, Filling level
-	ActualFillingLevel int `json:"actualFillingLevel"`
+	ActualFillingLevel int     `json:"actualFillingLevel"`
+	HighThreshold      float64 `json:"highThreshold"`
 }
 
 func (fl FillingLevel) ID() string {
