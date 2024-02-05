@@ -48,8 +48,6 @@ func TestMapToFillingLevels(t *testing.T) {
 	is.Equal(3, len(fillingLevels))
 	fmt.Println(len(fillingLevels))
 
-	// är det rätt att kolla procent så här? alltså att lastCollection.percentFull ska mappas till ActualFillingPercentage?
-	// eller är det ett annat värde som ska användas?
 	is.Equal(float64(60), fillingLevels[1].ActualFillingPercentage)
 }
 

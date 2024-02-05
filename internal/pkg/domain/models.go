@@ -49,15 +49,13 @@ func NewFillingLevel(deviceID string, actualFillingPercentage float64, container
 
 type FillingLevel struct {
 	DeviceInfo
-
-	//	Mandatory, Filling level
 	ActualFillingPercentage float64 `json:"actualFillingPercentage"`
 	ContainerFull           bool    `json:"containerFull"`
-	ContainerEmpty          bool    `json:"containerEmpty"` // vad är skillnaden på de här? Kan båda vara true samtidigt?
+	ContainerEmpty          bool    `json:"containerEmpty"`
+	HighThreshold           float64 `json:"highThreshold"`
+}
 
-	//	Optional, Filling level
-	ActualFillingLevel int     `json:"actualFillingLevel"`
-	HighThreshold      float64 `json:"highThreshold"`
+type WasteContainer struct {
 }
 
 func (fl FillingLevel) ID() string {
