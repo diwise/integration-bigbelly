@@ -115,7 +115,8 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 
 			if actualFillingPercentage >= highThreshold {
 				containerFull = true
-			} else if actualFillingPercentage > 0 {
+			}
+			if actualFillingPercentage > 0 {
 				containerEmpty = false
 			}
 
