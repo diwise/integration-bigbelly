@@ -46,10 +46,11 @@ func TestMapToFillingLevels(t *testing.T) {
 	is.NoErr(err)
 
 	is.Equal(3, len(fillingLevels))
+	fmt.Println(len(fillingLevels))
 
 	// är det rätt att kolla procent så här? alltså att lastCollection.percentFull ska mappas till ActualFillingPercentage?
 	// eller är det ett annat värde som ska användas?
-	is.Equal(float64(8), fillingLevels[1].ActualFillingPercentage)
+	is.Equal(float64(60), fillingLevels[1].ActualFillingPercentage)
 }
 
 const assetsResponse string = `{
@@ -80,7 +81,7 @@ const assetsResponse string = `{
             "status": "IN_SERVICE"
         },
         {
-            "latestFullness": 0,
+            "latestFullness": 6,
             "reason": "NOT_READY",
             "serialNumber": 2,
             "accountName": "Test kommun",

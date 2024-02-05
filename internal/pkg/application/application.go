@@ -103,7 +103,6 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 		} else {
 			//fl := domain.NewFillingLevel(asset.ID, asset.ActualFillingPercentage, asset.ContainerFull, asset.ContainerEmpty, asset.LastCollection.Timestamp)
 			// beräkna fillingpercentage mha vad??? LatestFullness *10?
-			//actualFillingPercentage := 100;
 
 			// Om fillingPercentage > 100 -> containerFull true annars false
 			containerFull := false
@@ -114,10 +113,10 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 			actualFillingPercentage = float64(asset.LatestFullness) * 10
 			highThreshold = float64(asset.FullnessThreshold) * 10
 
-			if actualFillingPercentage >= 100 {
+			if actualFillingPercentage >= highThreshold {
 				containerFull = true
-			} else {
-
+			} else if actualFillingPercentage > 0 {
+				containerEmpty = false
 			}
 
 			// Viken tid ska sättas i time
