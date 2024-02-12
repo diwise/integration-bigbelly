@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/diwise/integration-bigbelly/internal/pkg/application"
@@ -40,5 +39,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(fillingLevels)
+	err = app.Send(ctx, fillingLevels)
+	if err != nil {
+		// felhantera...
+		log.Error("failed to send filling levels", "err", err.Error())
+		os.Exit(1)
+	}
 }
