@@ -28,6 +28,8 @@ type BigBellyResponse struct {
 	ErrorCode string         `json:"errorCode"`
 }
 
+const OutOfService string = "OUT_OF_SERVICE"
+
 func New(bigBellyApiUrl string, xToken string) App {
 	return App{
 		bigBellyApiUrl: bigBellyApiUrl,
@@ -92,18 +94,15 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 	var fillingLevels []domain.FillingLevel
 
 	for _, asset := range assets {
-
-		if asset.Status == "OUT_OF_SERVICE" {
+		if asset.Status == OutOfService {
 			continue
 		} else {
 
 			containerFull := false
 			containerEmpty := true
-			var actualFillingPercentage float64
-			var highThreshold float64
 
-			actualFillingPercentage = float64(asset.LatestFullness) * 10
-			highThreshold = float64(asset.FullnessThreshold) * 10
+			actualFillingPercentage := float64(asset.LatestFullness) * 10
+			highThreshold := float64(asset.FullnessThreshold) * 10
 
 			if actualFillingPercentage >= highThreshold {
 				containerFull = true
@@ -112,11 +111,11 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 				containerEmpty = false
 			}
 
-			fl := domain.NewFillingLevel(strconv.Itoa(int(asset.SerialNumber)), actualFillingPercentage, containerFull, containerEmpty, highThreshold, time.Now().UTC())
+			fl := domain.NewFillingLevel(strconv.Itoa(int(asset.SerialNumber)), actualFillingPercentage, containerFull, containerEmpty, time.Now().UTC())
+			fl.HighThreshold = highThreshold
+
 			fillingLevels = append(fillingLevels, fl)
-
 		}
-
 	}
 
 	return fillingLevels, nil

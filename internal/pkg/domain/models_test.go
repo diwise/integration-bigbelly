@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/matryer/is"
 )
@@ -18,6 +19,18 @@ func TestAssetStruct(t *testing.T) {
 	is.Equal("Torget", a.Description)
 	//is.Equal(1704872214000, a.LastCollection.Timestamp)
 	fmt.Printf("%+v\n", assetJson)
+}
+
+func TestMarshalFillingLevel(t *testing.T) {
+	is := is.New(t)
+
+	f := NewFillingLevel("deviceid", 50, false, false, time.Now())
+	f.HighThreshold = 80
+
+	b, err := json.Marshal(f)
+	is.NoErr(err)
+
+	is.True(b != nil)
 }
 
 const assetJson string = `

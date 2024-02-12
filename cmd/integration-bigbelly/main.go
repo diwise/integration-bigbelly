@@ -32,7 +32,7 @@ func main() {
 		log.Error("failed to get assets", "err", err.Error())
 		os.Exit(1)
 	}
-	
+
 	fillingLevels, err := app.MapToFillingLevels(ctx, assets)
 	if err != nil {
 		// felhantera...
