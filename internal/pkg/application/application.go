@@ -120,3 +120,7 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 
 	return fillingLevels, nil
 }
+
+func (a *App) Send(ctx context.Context, fillingLevels []domain.FillingLevel) error {
+	return nil
+}
