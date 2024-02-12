@@ -39,7 +39,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = app.Send(ctx, fillingLevels)
+	err = app.Send(ctx, fillingLevels, application.HttpPost)
 	if err != nil {
 		// felhantera...
 		log.Error("failed to send filling levels", "err", err.Error())
