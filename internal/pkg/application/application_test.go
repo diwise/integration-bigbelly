@@ -70,14 +70,17 @@ func TestSend(t *testing.T) {
 	fillingLevels, err := app.MapToFillingLevels(context.Background(), r.Assets)
 	is.NoErr(err)
 
-	var testSender SenderFunc = func(context.Context, string, []byte) error {
-		return err
+	i := 0
+
+	testSender := func(context.Context, string, []byte) error {
+		i++
+		return nil
 	}
 
 	err = app.Send(context.Background(), fillingLevels, testSender)
 	is.NoErr(err)
 
-	is.Equal(3, len(fillingLevels))
+	is.Equal(3, i)
 	fmt.Println(fillingLevels)
 }
 

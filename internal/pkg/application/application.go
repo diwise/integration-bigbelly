@@ -124,15 +124,13 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 	return fillingLevels, nil
 }
 
-// Skriv tester för det som är nedan
 func (a *App) Send(ctx context.Context, fillingLevels []domain.FillingLevel, sender SenderFunc) error {
 	for _, f := range fillingLevels {
 		b, err := json.Marshal(f)
 		if err != nil {
 			return err
 		}
-		// url ska ej vara hårdkodad sträng utan hämtas likt XTOKEN, apiUrl?
-		//err = sender(ctx, "url till diwise", b)
+
 		err = sender(ctx, a.diwiseApiUrl, b)
 		if err != nil {
 			return err
