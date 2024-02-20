@@ -22,8 +22,9 @@ func main() {
 
 	bigBellyApiUrl := env.GetVariableOrDie(ctx, "BIGBELLY_API", "bigbelly url")
 	xToken := env.GetVariableOrDie(ctx, "XTOKEN", "API key")
+	diwiseApiUrl := env.GetVariableOrDie(ctx, "DIWISE_API", "diwise url")
 
-	app := application.New(bigBellyApiUrl, xToken)
+	app := application.New(bigBellyApiUrl, xToken, diwiseApiUrl)
 
 	assets, err := app.GetAssets(ctx)
 	if err != nil {

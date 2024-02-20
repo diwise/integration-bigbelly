@@ -22,6 +22,7 @@ var tracer = otel.Tracer("integration-bigbelly/app")
 type App struct {
 	bigBellyApiUrl string
 	xToken         string
+	diwiseApiUrl   string
 }
 
 type BigBellyResponse struct {
@@ -31,10 +32,11 @@ type BigBellyResponse struct {
 
 const OutOfService string = "OUT_OF_SERVICE"
 
-func New(bigBellyApiUrl string, xToken string) App {
+func New(bigBellyApiUrl string, xToken string, diwiseApiUrl string) App {
 	return App{
 		bigBellyApiUrl: bigBellyApiUrl,
 		xToken:         xToken,
+		diwiseApiUrl:   diwiseApiUrl,
 	}
 }
 
@@ -122,14 +124,16 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 	return fillingLevels, nil
 }
 
+// Skriv tester för det som är nedan
 func (a *App) Send(ctx context.Context, fillingLevels []domain.FillingLevel, sender SenderFunc) error {
 	for _, f := range fillingLevels {
 		b, err := json.Marshal(f)
 		if err != nil {
 			return err
 		}
-
-		err = sender(ctx, "url till diwise", b)
+		// url ska ej vara hårdkodad sträng utan hämtas likt XTOKEN, apiUrl?
+		//err = sender(ctx, "url till diwise", b)
+		err = sender(ctx, a.diwiseApiUrl, b)
 		if err != nil {
 			return err
 		}
@@ -148,7 +152,7 @@ func HttpPost(ctx context.Context, url string, b []byte) error {
 
 	httpClient := http.Client{
 		Transport: otelhttp.NewTransport(http.DefaultTransport),
-	}	
+	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(b))
 	if err != nil {
