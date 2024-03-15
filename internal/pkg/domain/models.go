@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/farshidtz/senml/v2"
+	"github.com/diwise/senml"
 )
 
 type Asset struct {

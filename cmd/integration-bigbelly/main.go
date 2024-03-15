@@ -27,22 +27,19 @@ func main() {
 	app := application.New(bigBellyApiUrl, xToken, diwiseApiUrl)
 
 	assets, err := app.GetAssets(ctx)
-	if err != nil {
-		// felhantera...
+	if err != nil {		
 		log.Error("failed to get assets", "err", err.Error())
 		os.Exit(1)
 	}
 
 	fillingLevels, err := app.MapToFillingLevels(ctx, assets)
-	if err != nil {
-		// felhantera...
+	if err != nil {		
 		log.Error("failed to map filling levels", "err", err.Error())
 		os.Exit(1)
 	}
 
 	err = app.Send(ctx, fillingLevels, application.HttpPost)
-	if err != nil {
-		// felhantera...
+	if err != nil {		
 		log.Error("failed to send filling levels", "err", err.Error())
 		os.Exit(1)
 	}

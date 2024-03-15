@@ -56,8 +56,7 @@ func (a *App) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 
 	apiUrl := fmt.Sprintf("%s?%s", a.bigBellyApiUrl, params.Encode())
 
-	var req *http.Request
-	req, err = http.NewRequestWithContext(ctx, http.MethodGet, apiUrl, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, apiUrl, nil)
 	if err != nil {
 		err = fmt.Errorf("failed to create request: %s", err.Error())
 		return nil, err
@@ -65,9 +64,8 @@ func (a *App) GetAssets(ctx context.Context) ([]domain.Asset, error) {
 
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("X-Token", a.xToken)
-
-	var resp *http.Response
-	resp, err = httpClient.Do(req)
+	
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		err = fmt.Errorf("request failed: %s", err.Error())
 		return nil, err
