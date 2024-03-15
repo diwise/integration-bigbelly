@@ -51,6 +51,39 @@ func TestMapToFillingLevels(t *testing.T) {
 	is.Equal(float64(60), fillingLevels[1].ActualFillingPercentage)
 }
 
+func TestSend(t *testing.T) {
+	is := is.New(t)
+
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, assetsResponse)
+	}))
+	defer svr.Close()
+
+	app := App{
+		diwiseApiUrl: svr.URL,
+		xToken:       "nisse",
+	}
+	r := BigBellyResponse{}
+	err := json.Unmarshal([]byte(assetsResponse), &r)
+	is.NoErr(err)
+
+	fillingLevels, err := app.MapToFillingLevels(context.Background(), r.Assets)
+	is.NoErr(err)
+
+	i := 0
+
+	testSender := func(context.Context, string, []byte) error {
+		i++
+		return nil
+	}
+
+	err = app.Send(context.Background(), fillingLevels, testSender)
+	is.NoErr(err)
+
+	is.Equal(3, i)
+	fmt.Println(fillingLevels)
+}
+
 const assetsResponse string = `{
     "assets": [
         {

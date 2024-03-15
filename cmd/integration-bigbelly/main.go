@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/diwise/integration-bigbelly/internal/pkg/application"
@@ -23,8 +22,9 @@ func main() {
 
 	bigBellyApiUrl := env.GetVariableOrDie(ctx, "BIGBELLY_API", "bigbelly url")
 	xToken := env.GetVariableOrDie(ctx, "XTOKEN", "API key")
+	diwiseApiUrl := env.GetVariableOrDie(ctx, "DIWISE_API", "diwise url")
 
-	app := application.New(bigBellyApiUrl, xToken)
+	app := application.New(bigBellyApiUrl, xToken, diwiseApiUrl)
 
 	assets, err := app.GetAssets(ctx)
 	if err != nil {
@@ -40,5 +40,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(fillingLevels)
+	err = app.Send(ctx, fillingLevels, application.HttpPost)
+	if err != nil {
+		// felhantera...
+		log.Error("failed to send filling levels", "err", err.Error())
+		os.Exit(1)
+	}
 }

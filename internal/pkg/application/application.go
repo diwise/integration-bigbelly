@@ -1,6 +1,7 @@
 package application
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -21,6 +22,7 @@ var tracer = otel.Tracer("integration-bigbelly/app")
 type App struct {
 	bigBellyApiUrl string
 	xToken         string
+	diwiseApiUrl   string
 }
 
 type BigBellyResponse struct {
@@ -30,10 +32,11 @@ type BigBellyResponse struct {
 
 const OutOfService string = "OUT_OF_SERVICE"
 
-func New(bigBellyApiUrl string, xToken string) App {
+func New(bigBellyApiUrl string, xToken string, diwiseApiUrl string) App {
 	return App{
 		bigBellyApiUrl: bigBellyApiUrl,
 		xToken:         xToken,
+		diwiseApiUrl:   diwiseApiUrl,
 	}
 }
 
@@ -119,4 +122,49 @@ func (a *App) MapToFillingLevels(ctx context.Context, assets []domain.Asset) ([]
 	}
 
 	return fillingLevels, nil
+}
+
+func (a *App) Send(ctx context.Context, fillingLevels []domain.FillingLevel, sender SenderFunc) error {
+	for _, f := range fillingLevels {
+		b, err := json.Marshal(f)
+		if err != nil {
+			return err
+		}
+
+		err = sender(ctx, a.diwiseApiUrl, b)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+type SenderFunc = func(context.Context, string, []byte) error
+
+func HttpPost(ctx context.Context, url string, b []byte) error {
+	var err error
+
+	ctx, span := tracer.Start(ctx, "send-fillingLevel")
+	defer func() { tracing.RecordAnyErrorAndEndSpan(err, span) }()
+
+	httpClient := http.Client{
+		Transport: otelhttp.NewTransport(http.DefaultTransport),
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(b))
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Content-Type", "application/senml+json")
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return err
+	} else if resp.StatusCode != http.StatusCreated {
+		err = fmt.Errorf("unexpected response code %d", resp.StatusCode)
+	}
+
+	return err
 }
